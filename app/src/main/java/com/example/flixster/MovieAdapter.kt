@@ -1,6 +1,7 @@
 package com.example.flixster
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.Configuration
 import android.view.LayoutInflater
 import android.view.View
@@ -11,6 +12,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.flixster.models.Movie
 
+const val MOVIE_EXTRA = "MOVIE_EXTRA"
 class MovieAdapter(private val context: Context, private val movies: MutableList<Movie>)
     : RecyclerView.Adapter<MovieAdapter.ViewHolder>() {
 
@@ -28,10 +30,14 @@ class MovieAdapter(private val context: Context, private val movies: MutableList
         return movies.size
     }
 
-    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+    inner class ViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView), View.OnClickListener {
         private val tvTitle = itemView.findViewById<TextView>(R.id.tvTitle)
         private val tvOverview = itemView.findViewById<TextView>(R.id.tvOverview)
         private val ivPoster = itemView.findViewById<ImageView>(R.id.ivPoster)
+
+        init {
+            itemView.setOnClickListener(this)
+        }
 
         fun bind(movie:Movie) {
             tvTitle.text = movie.title
@@ -48,6 +54,15 @@ class MovieAdapter(private val context: Context, private val movies: MutableList
                 .load(imageURL)
                 .placeholder(R.drawable.placeholder)
                 .into(ivPoster)
+
+        }
+
+        override fun onClick(v: View?) {
+            val movie = movies[adapterPosition]
+
+            val intent = Intent(context, DetailActivity::class.java)
+            intent.putExtra(MOVIE_EXTRA, movie) // make movie model Parcelize
+            context.startActivity(intent)
 
         }
     }
