@@ -10,6 +10,7 @@ import android.widget.ImageView
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.resource.bitmap.RoundedCorners
 import com.example.flixster.models.Movie
 
 const val MOVIE_EXTRA = "MOVIE_EXTRA"
@@ -50,16 +51,17 @@ class MovieAdapter(private val context: Context, private val movies: MutableList
                 imageURL = movie.backdropImageURL
             }
 
+            val radius = 10; // corner radius, higher value = more rounded
             Glide.with(context)
                 .load(imageURL)
                 .placeholder(R.drawable.placeholder)
+                .transform(RoundedCorners(radius))
                 .into(ivPoster)
 
         }
 
         override fun onClick(v: View?) {
             val movie = movies[adapterPosition]
-
             val intent = Intent(context, DetailActivity::class.java)
             intent.putExtra(MOVIE_EXTRA, movie) // make movie model Parcelize
             context.startActivity(intent)
